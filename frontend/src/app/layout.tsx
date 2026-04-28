@@ -24,7 +24,7 @@ const ibmMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'AssignIQ — Intelligent Ticket Assignment',
+  title: 'SprintIQ — Intelligent Ticket Assignment',
   description: 'AI-powered Jira ticket assignment for engineering teams.',
 };
 

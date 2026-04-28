@@ -206,7 +206,7 @@ export default function DashboardPage() {
           <div className="kpi-foot">
             <span className="ai-chip">
               <SparkleIcon className="ai-chip-sparkle" />
-              by AssignIQ
+              by SprintIQ
             </span>
           </div>
         </div>
@@ -381,7 +381,7 @@ export default function DashboardPage() {
                     )}
                   </div>
                   <span className="mono text-[12px] text-fg-subtle tnum whitespace-nowrap">
-                    {a.final_score !== null ? `· ${a.final_score.toFixed(2)}` : ''}
+                    {a.final_score != null ? `· ${Number(a.final_score).toFixed(2)}` : ''}
                   </span>
                 </li>
               ))}

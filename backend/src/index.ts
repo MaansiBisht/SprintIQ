@@ -53,7 +53,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`AssignIQ backend running on port ${PORT}`);
+  console.log(`SprintIQ backend running on port ${PORT}`);
 });
 
 export default app;

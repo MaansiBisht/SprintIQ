@@ -112,7 +112,7 @@ export default function Sidebar() {
             <span className="absolute right-0 top-0 w-3 h-3 rounded-full bg-coral" style={{ transform: 'translate(35%,-35%)' }} />
           </div>
           <div className="min-w-0">
-            <div className="text-[15px] font-semibold text-fg tracking-tight leading-none">AssignIQ</div>
+            <div className="text-[15px] font-semibold text-fg tracking-tight leading-none">SprintIQ</div>
             <div className="text-[10px] text-fg-subtle mt-1 font-semibold tracking-[0.08em] uppercase">for Jira</div>
           </div>
         </Link>

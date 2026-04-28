@@ -74,7 +74,10 @@ router.post('/:id/auto-assign', authMiddleware, async (req: Request, res: Respon
   try {
     const { id } = req.params;
 
-    const ticketResult = await query('SELECT jira_key FROM tickets WHERE id = $1 OR jira_key = $1', [id]);
+    const ticketResult = await query(
+      "SELECT jira_key FROM tickets WHERE id = $1::uuid OR jira_key = $1 LIMIT 1",
+      [id]
+    ).catch(() => query('SELECT jira_key FROM tickets WHERE jira_key = $1 LIMIT 1', [id]));
     if (ticketResult.rows.length === 0) {
       return res.status(404).json({ success: false, error: 'Ticket not found' });
     }
@@ -84,8 +87,9 @@ router.post('/:id/auto-assign', authMiddleware, async (req: Request, res: Respon
 
     res.json({ success: true, assignment });
   } catch (error) {
-    console.error('Auto-assign error:', error);
-    res.status(500).json({ success: false, error: 'Auto-assignment failed' });
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('Auto-assign error:', msg);
+    res.status(500).json({ success: false, error: msg });
   }
 });
 

@@ -1,4 +1,4 @@
-# AssignIQ - Jira Smart Assign
+# SprintIQ - Jira Smart Assign
 
 An intelligent ticket assignment system that integrates with Jira to automatically assign tickets based on developer expertise, workload, and fairness.
 
@@ -29,7 +29,7 @@ An intelligent ticket assignment system that integrates with Jira to automatical
 
 1. **Clone and install dependencies**:
 ```bash
-cd AssignIQ
+cd SprintIQ
 
 # Backend
 cd backend

@@ -1,5 +1,5 @@
 {
-  "name": "assigniq-backend",
+  "name": "sprintiq-backend",
   "version": "1.0.0",
   "description": "Jira Smart Assign backend API",
   "main": "dist/index.js",

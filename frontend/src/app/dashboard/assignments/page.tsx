@@ -120,7 +120,7 @@ export default function AssignmentsPage() {
         <div className="kpi kpi-ai anim-rise">
           <div className="kpi-label">Auto-matched</div>
           <div className="kpi-value">{autoCount.toLocaleString()}</div>
-          <div className="kpi-foot">by AssignIQ</div>
+          <div className="kpi-foot">by SprintIQ</div>
         </div>
         <div className="kpi anim-rise">
           <div className="kpi-label">Manual override</div>
@@ -195,7 +195,7 @@ export default function AssignmentsPage() {
                     <div className="flex items-center gap-3">
                       <div className="text-right">
                         <div className="mono text-[15px] font-medium text-fg tnum">
-                          {r.final_score !== null ? r.final_score.toFixed(2) : '—'}
+                          {r.final_score != null ? Number(r.final_score).toFixed(2) : '—'}
                         </div>
                         <div className="text-[10px] text-fg-subtle uppercase tracking-wider">score</div>
                       </div>

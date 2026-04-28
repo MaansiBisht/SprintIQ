@@ -56,7 +56,7 @@ export default function LoginPage() {
             <span className="absolute right-0 top-0 w-3.5 h-3.5 rounded-full bg-coral" style={{ transform: 'translate(35%,-35%)' }} />
           </div>
           <div>
-            <div className="text-white text-[17px] font-semibold tracking-tight leading-none">AssignIQ</div>
+            <div className="text-white text-[17px] font-semibold tracking-tight leading-none">SprintIQ</div>
             <div className="text-white/55 text-[10.5px] mt-1 font-semibold tracking-[0.12em] uppercase">for Jira</div>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function LoginPage() {
           </h2>
 
           <p className="text-[15.5px] text-white/70 leading-[1.6] text-balance max-w-[440px]">
-            AssignIQ weighs every Jira ticket against your team&apos;s expertise,
+            SprintIQ weighs every Jira ticket against your team&apos;s expertise,
             current load, and resolution history &mdash; so assignments ship faster and
             fairer, without a standup war.
           </p>
@@ -103,7 +103,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 mt-auto pt-8 flex items-center justify-between text-[11px] text-white/40 mono">
-          <span>© MMXXVI AssignIQ</span>
+          <span>© MMXXVI SprintIQ</span>
           <span>v1.0</span>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default function LoginPage() {
               <span className="relative z-10">A</span>
               <span className="absolute right-0 top-0 w-3 h-3 rounded-full bg-coral" style={{ transform: 'translate(35%,-35%)' }} />
             </div>
-            <div className="text-[16px] font-semibold tracking-tight text-fg">AssignIQ</div>
+            <div className="text-[16px] font-semibold tracking-tight text-fg">SprintIQ</div>
           </div>
 
           <h1 className="h-display mb-2">Sign in</h1>
