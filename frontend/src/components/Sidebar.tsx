@@ -67,6 +67,16 @@ const NAV = [
       </svg>
     ),
   },
+  {
+    href: '/dashboard/feedback',
+    label: 'Feedback',
+    icon: (
+      <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4">
+        <path d="M8 1.5v5M8 6.5l3 3M8 6.5l-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M2.5 11.5h11v2a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-2Z" stroke="currentColor" strokeWidth="1.3" />
+      </svg>
+    ),
+  },
 ];
 
 export default function Sidebar() {

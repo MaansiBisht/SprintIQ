@@ -121,7 +121,7 @@ export class ScoringService {
     };
   }
 
-  // 4 total DB queries regardless of team size: expertise, fairness, profiles, avg
+  // 5 total DB queries regardless of team size: expertise, fairness, profiles, avg, feedback adjustments
   private async batchScoreDevelopers(ticket: TicketRow, developers: DeveloperRow[]): Promise<DeveloperScore[]> {
     const devIds = developers.map((d) => d.id);
 
@@ -151,6 +151,20 @@ export class ScoringService {
     // Load skill profiles for all developers in one query
     const profilesById = await loadDeveloperProfiles(devIds);
 
+    // Load feedback-based score adjustments for ticket components
+    const feedbackAdjMap = new Map<string, number>();
+    if (ticket.components?.length > 0) {
+      const adjRows = (await query(
+        `SELECT developer_id, component, adjustment FROM developer_score_adjustments
+         WHERE developer_id = ANY($1) AND component = ANY($2)`,
+        [devIds, ticket.components]
+      )).rows;
+      for (const row of adjRows) {
+        const key = `${row.developer_id}`;
+        feedbackAdjMap.set(key, (feedbackAdjMap.get(key) || 0) + parseFloat(row.adjustment));
+      }
+    }
+
     return developers.map((dev) => {
       const expertiseCount = expertiseMap.get(dev.id) || 0;
       const expertise = ticket.components?.length > 0 ? Math.min(expertiseCount / 20, 1) : 0.5;
@@ -162,7 +176,10 @@ export class ScoringService {
         ? 1
         : Math.max(0, Math.min(1, 1 - ((recentAssignments - avgAssignments) / avgAssignments) * 0.5));
 
-      const adjustments = this.applyRuleAdjustments(ticket.priority, ticket.labels);
+      const ruleAdj = this.applyRuleAdjustments(ticket.priority, ticket.labels);
+      const feedbackAdj = feedbackAdjMap.get(dev.id) || 0;
+      const adjustments = ruleAdj + feedbackAdj;
+
       const total =
         this.weights.expertise * expertise +
         this.weights.similarity * similarity +

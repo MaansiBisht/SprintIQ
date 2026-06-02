@@ -136,6 +136,68 @@ router.post('/webhook', async (req: Request, res: Response) => {
       await scoringService.autoAssignTicket(issue.key, 'webhook');
     }
 
+    if (webhookEvent === 'jira:issue_updated' && issue) {
+      const { FeedbackService } = await import('../services/feedback');
+      const feedbackService = new FeedbackService();
+      const changelog = req.body.changelog;
+
+      if (changelog?.items) {
+        for (const item of changelog.items) {
+          // Detect status change to Done/Closed
+          if (item.field === 'status' && ['Done', 'Closed'].includes(item.toString)) {
+            const ticketResult = await query(
+              'SELECT t.id, t.created_at FROM tickets t WHERE t.jira_key = $1', [issue.key]
+            );
+            if (ticketResult.rows.length > 0) {
+              const ticket = ticketResult.rows[0];
+              const assignmentResult = await query(
+                'SELECT id, developer_id FROM assignments WHERE ticket_id = $1 ORDER BY created_at DESC LIMIT 1',
+                [ticket.id]
+              );
+              if (assignmentResult.rows.length > 0) {
+                const a = assignmentResult.rows[0];
+                const hoursElapsed = (Date.now() - new Date(ticket.created_at).getTime()) / 3_600_000;
+                const avgResult = await query(
+                  'SELECT AVG(resolution_time_hours) as avg FROM tickets WHERE resolution_time_hours IS NOT NULL'
+                );
+                const avgHours = parseFloat(avgResult.rows[0]?.avg) || 48;
+                const outcome = hoursElapsed < avgHours * 0.5 ? 'completed_fast'
+                  : hoursElapsed > avgHours * 2 ? 'completed_late' : 'completed';
+
+                await feedbackService.recordOutcome({
+                  assignmentId: a.id, ticketId: ticket.id, developerId: a.developer_id,
+                  outcome, resolutionHours: hoursElapsed, source: 'webhook',
+                });
+              }
+            }
+          }
+
+          // Detect reassignment
+          if (item.field === 'assignee' && item.from && item.to && item.from !== item.to) {
+            const ticketResult = await query('SELECT id FROM tickets WHERE jira_key = $1', [issue.key]);
+            if (ticketResult.rows.length > 0) {
+              const ticketId = ticketResult.rows[0].id;
+              const prevDev = await query('SELECT id FROM developers WHERE jira_user_id = $1', [item.from]);
+              const newDev = await query('SELECT id FROM developers WHERE jira_user_id = $1', [item.to]);
+              if (prevDev.rows.length > 0) {
+                const assignmentResult = await query(
+                  'SELECT id FROM assignments WHERE ticket_id = $1 AND developer_id = $2 ORDER BY created_at DESC LIMIT 1',
+                  [ticketId, prevDev.rows[0].id]
+                );
+                if (assignmentResult.rows.length > 0) {
+                  await feedbackService.recordOutcome({
+                    assignmentId: assignmentResult.rows[0].id, ticketId, developerId: prevDev.rows[0].id,
+                    outcome: 'reassigned', wasReassigned: true,
+                    reassignedTo: newDev.rows[0]?.id, source: 'webhook',
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     res.json({ success: true });
   } catch {
     res.status(500).json({ success: false, error: 'Webhook processing failed' });

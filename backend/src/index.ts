@@ -11,6 +11,7 @@ import developerRoutes from './routes/developers';
 import assignmentRoutes from './routes/assignments';
 import settingsRoutes from './routes/settings';
 import analyticsRoutes from './routes/analytics';
+import feedbackRoutes from './routes/feedback';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -45,6 +46,7 @@ app.use('/api/developers', developerRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
