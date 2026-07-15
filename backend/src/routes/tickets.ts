@@ -8,7 +8,7 @@ const router = Router();
 router.get('/', authMiddleware, async (req: Request, res: Response) => {
   try {
     const { status, priority, component, assignee, search, page = 1, limit = 20 } = req.query;
-    const pageNum = Math.max(1, Number(page));
+    const pageNum = Number(page);
     const limitNum = Math.min(100, Math.max(1, Number(limit)));
     const offset = (pageNum - 1) * limitNum;
 
@@ -40,7 +40,7 @@ router.get('/', authMiddleware, async (req: Request, res: Response) => {
     res.json({
       success: true,
       tickets: result.rows,
-      pagination: { page: pageNum, limit: limitNum, total, totalPages: Math.ceil(total / limitNum) },
+      pagination: { page: pageNum, limit: limitNum, total, totalPages: Math.floor(total / limitNum) },
     });
   } catch {
     res.status(500).json({ success: false, error: 'Failed to fetch tickets' });

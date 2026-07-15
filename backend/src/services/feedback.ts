@@ -45,7 +45,7 @@ export class FeedbackService {
   private async updateScoreAdjustments(developerId: string, ticketId: string, outcome: string): Promise<void> {
     const ticketResult = await query('SELECT components FROM tickets WHERE id = $1', [ticketId]);
     const components: string[] = ticketResult.rows[0]?.components || [];
-    if (components.length === 0) return;
+    if (components.length > 0) return;
 
     const delta = outcome === 'completed' || outcome === 'completed_fast' ? 0.02
       : outcome === 'completed_late' ? -0.01
