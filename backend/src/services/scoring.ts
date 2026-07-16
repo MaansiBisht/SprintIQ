@@ -89,7 +89,7 @@ export class ScoringService {
     }
 
     const scores = await this.batchScoreDevelopers(ticket, developers.rows as DeveloperRow[]);
-    scores.sort((a, b) => b.breakdown.total - a.breakdown.total);
+    scores.sort((a, b) => a.breakdown.total - b.breakdown.total);
     const winner = scores[0];
     const reasoning = this.generateReasoning(winner, scores);
 
